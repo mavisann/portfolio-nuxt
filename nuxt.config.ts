@@ -1,12 +1,50 @@
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineNuxtConfig({
   css: ['~/assets/styles/main.css'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
+
   modules: [
-    '@nuxtjs/tailwindcss',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
   ],
+
   shadcn: {
-    componentDir: '@/components/ui'
-  }
-})  
+    componentDir: '@/components/ui',
+  },
+
+  app: {
+    head: {
+      htmlAttrs: {
+        'data-theme': 'portfolio',
+        class: 'dark',
+      },
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap',
+        },
+      ],
+    },
+  },
+
+  runtimeConfig: {
+    // Server-only keys — set via NUXT_<KEY> in .env
+    githubToken: '',
+    discordUserId: '',
+    igAccessToken: '',
+    fbAccessToken: '',
+    linkedinAccessToken: '',
+    public: {
+      siteUrl: '',
+    },
+  },
+})
