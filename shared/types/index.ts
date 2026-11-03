@@ -23,6 +23,7 @@ export interface GitHubContributionDay {
   date: string
   contributionCount: number
   color: string
+  isFuture?: boolean
 }
 
 export interface GitHubContributionWeek {

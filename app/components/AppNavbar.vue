@@ -64,7 +64,7 @@ watch(() => route.path, () => {
 <template>
   <header class="fixed top-4 inset-x-0 z-50 px-4 max-w-5xl mx-auto">
     <!-- Wide Floating Navbar -->
-    <nav class="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 shadow-2xl shadow-black/50 flex items-center justify-between">
+    <nav class="bg-[#0D1B2A]/85 backdrop-blur-xl border border-[#415A77]/40 rounded-full px-5 py-2 shadow-2xl shadow-black/60 flex items-center justify-between">
       
       <!-- Left: Brand Logo & Name -->
       <NuxtLink
@@ -79,19 +79,19 @@ watch(() => route.path, () => {
             class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
           />
         </div>
-        <span class="font-serif tracking-tight font-bold text-sm md:text-base text-white group-hover:text-indigo-200 transition-colors">
+        <span class="font-serif tracking-tight font-bold text-sm md:text-base text-[#E0E1DD] group-hover:text-white transition-colors">
           Prince Semillano
         </span>
       </NuxtLink>
 
-      <!-- Center: Perfectly Centered ForgeUI Animated Tabs (w-fit, symmetrical padding, exact left-0 alignment) -->
+      <!-- Center: Concentric ForgeUI Animated Tabs (w-fit, symmetrical padding, exact left-0 alignment) -->
       <div
         ref="tabContainerRef"
-        class="hidden md:flex relative items-center gap-1 w-fit rounded-full border border-white/10 bg-slate-950/70 p-1.5 backdrop-blur-md shadow-inner"
+        class="hidden md:flex relative items-center gap-1 w-fit rounded-full border border-[#415A77]/40 bg-[#1B263B]/70 p-1.5 backdrop-blur-md shadow-inner"
       >
-        <!-- Sliding Spring Pill (Exact 1:1 match with button bounds via left-0 + offsetLeft) -->
+        <!-- Sliding Spring Pill (Deep Sea steel blue accent) -->
         <div
-          class="absolute left-0 top-1.5 rounded-full bg-neutral-800/90 border border-white/15 shadow-md shadow-black/40 pointer-events-none will-change-transform"
+          class="absolute left-0 top-1.5 rounded-full bg-[#415A77]/60 border border-[#778DA9]/50 shadow-md shadow-black/40 pointer-events-none will-change-transform"
           :style="{
             transform: `translateX(${indicatorStyle.left}px)`,
             width: `${indicatorStyle.width}px`,
@@ -101,7 +101,7 @@ watch(() => route.path, () => {
           }"
         />
 
-        <!-- Tab Items (items-center justify-center text-center for 100% dead-center typography) -->
+        <!-- Tab Items (Crystal-clear visibility) -->
         <NuxtLink
           v-for="(link, index) in navLinks"
           :key="link.path"
@@ -111,7 +111,7 @@ watch(() => route.path, () => {
           :class="[
             isActive(link.path)
               ? 'text-white font-semibold'
-              : 'text-neutral-400 hover:text-white'
+              : 'text-[#CED4DA] hover:text-white'
           ]"
         >
           <span class="inline-block leading-none">{{ link.name }}</span>
@@ -122,7 +122,7 @@ watch(() => route.path, () => {
       <div class="flex items-center gap-2">
         <NuxtLink
           to="/contact"
-          class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/10 shadow-sm transition-all duration-200 hover:scale-[1.03]"
+          class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-semibold text-[#E0E1DD] bg-[#415A77]/70 hover:bg-[#415A77] border border-[#778DA9]/40 shadow-sm transition-all duration-200 hover:scale-[1.03]"
         >
           Get in touch
         </NuxtLink>
@@ -130,7 +130,7 @@ watch(() => route.path, () => {
         <!-- Mobile Menu Toggle Button -->
         <button
           type="button"
-          class="md:hidden p-2 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/50 transition-colors"
+          class="md:hidden p-2 rounded-full text-[#E0E1DD] hover:text-white hover:bg-[#415A77]/40 transition-colors"
           aria-label="Toggle mobile menu"
           @click="mobileMenuOpen = !mobileMenuOpen"
         >
@@ -167,7 +167,7 @@ watch(() => route.path, () => {
     >
       <div
         v-if="mobileMenuOpen"
-        class="md:hidden mt-2 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-3 shadow-2xl flex flex-col gap-1"
+        class="md:hidden mt-2 bg-[#0D1B2A]/95 backdrop-blur-2xl border border-[#415A77]/40 rounded-2xl p-3 shadow-2xl flex flex-col gap-1"
       >
         <NuxtLink
           v-for="link in navLinks"
@@ -176,17 +176,17 @@ watch(() => route.path, () => {
           class="px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
           :class="[
             isActive(link.path)
-              ? 'bg-white/15 text-white font-semibold'
-              : 'text-neutral-400 hover:text-white hover:bg-white/5'
+              ? 'bg-[#415A77]/50 text-white font-semibold'
+              : 'text-[#CED4DA] hover:text-white hover:bg-[#415A77]/20'
           ]"
           @click="mobileMenuOpen = false"
         >
           {{ link.name }}
         </NuxtLink>
-        <div class="pt-2 mt-1 border-t border-white/10">
+        <div class="pt-2 mt-1 border-t border-[#415A77]/30">
           <NuxtLink
             to="/contact"
-            class="w-full inline-flex items-center justify-center py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+            class="w-full inline-flex items-center justify-center py-2 rounded-xl text-xs font-semibold text-[#E0E1DD] bg-[#415A77] hover:bg-[#778DA9] transition-colors"
             @click="mobileMenuOpen = false"
           >
             Get in touch
