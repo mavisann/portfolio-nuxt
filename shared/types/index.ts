@@ -45,15 +45,30 @@ export interface DiscordActivity {
   details?: string
   largeImageUrl?: string
   smallImageUrl?: string
+  timestamps?: {
+    start?: number
+    end?: number
+  }
 }
 
 export interface DiscordPresence {
   discordStatus: 'online' | 'idle' | 'dnd' | 'offline'
   activities: DiscordActivity[]
+  customStatus?: string | null
+  discordUser?: {
+    username: string
+    displayName?: string
+    avatarUrl?: string
+  } | null
   spotify?: {
     song: string
     artist: string
     albumArtUrl: string
+    album?: string
+    timestamps?: {
+      start: number
+      end: number
+    }
   } | null
 }
 
@@ -62,9 +77,10 @@ export interface DiscordPresence {
 export interface SocialProfile {
   username: string
   name: string
-  avatarUrl: string
+  avatarUrl?: string
+  profileUrl: string
   bio: string
-  stats: Record<string, number>
+  stats: Record<string, string | number>
 }
 
 export interface SocialPost {

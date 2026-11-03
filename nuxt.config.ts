@@ -37,12 +37,12 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    // Server-only keys — set via NUXT_<KEY> in .env
-    githubToken: '',
-    discordUserId: '',
-    igAccessToken: '',
-    fbAccessToken: '',
-    linkedinAccessToken: '',
+    // Server-only keys — set via GITHUB_TOKEN / NUXT_<KEY> in .env
+    githubToken: process.env.GITHUB_TOKEN || process.env.NUXT_GITHUB_TOKEN || '',
+    discordUserId: '1277974645580103765',
+    igAccessToken: process.env.NUXT_IG_ACCESS_TOKEN || '',
+    fbAccessToken: process.env.NUXT_FB_ACCESS_TOKEN || '',
+    linkedinAccessToken: process.env.NUXT_LINKEDIN_ACCESS_TOKEN || '',
     public: {
       siteUrl: '',
     },
