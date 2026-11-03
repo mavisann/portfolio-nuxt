@@ -1,12 +1,34 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Shader, InkFlow } from 'shaders/vue'
 
+const scrollY = ref(0)
+let ticking = false
+
+const onScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      scrollY.value = window.scrollY
+      ticking = false
+    })
+    ticking = true
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+})
+
 const onShaderReady = () => {
-  // WebGPU shader initialized and rendering
+  // WebGPU shader initialized
 }
 
 const onShaderUnavailable = (reason: unknown) => {
-  console.warn('[Shaders] WebGPU not available in this browser:', reason)
+  console.warn('[Shaders] WebGPU unavailable:', reason)
 }
 </script>
 
@@ -14,8 +36,14 @@ const onShaderUnavailable = (reason: unknown) => {
   <div class="relative min-h-screen text-base-content overflow-x-hidden selection:bg-pink-500/30 selection:text-white">
     <NuxtRouteAnnouncer />
 
-    <!-- Fullscreen Interactive Shader Background (Z-index: 0, above body #0f172a, below content z-10) -->
-    <div class="fixed inset-0 w-full h-full z-0 pointer-events-none overflow-hidden">
+    <!-- Fullscreen Parallax Shader Background (drifts on scroll with 3D depth) -->
+    <div
+      class="fixed -top-[20vh] -left-[10vw] w-[120vw] h-[140vh] z-0 pointer-events-none overflow-hidden will-change-transform"
+      :style="{
+        transform: `translate3d(0, ${-scrollY * 0.2}px, 0)`,
+        transition: 'transform 0.1s cubic-bezier(0,0,0.2,1)',
+      }"
+    >
       <ClientOnly>
         <Shader
           class="w-full h-full"
@@ -31,7 +59,7 @@ const onShaderUnavailable = (reason: unknown) => {
     </div>
 
     <!-- Application Pages & Frosted Glass Content (Z-index: 10) -->
-    <div class="relative z-10 min-h-screen pointer-events-auto">
+    <div class="relative z-10 min-h-screen pointer-events-auto flex flex-col">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -48,7 +76,6 @@ body {
   padding: 0;
 }
 
-/* Ensure the shader element and canvas fill the fullscreen container */
 .shader,
 .shader canvas {
   width: 100% !important;
