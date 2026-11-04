@@ -41,7 +41,6 @@ export default defineNuxtConfig({
     githubToken: process.env.GITHUB_TOKEN || process.env.NUXT_GITHUB_TOKEN || '',
     discordUserId: '1277974645580103765',
     igAccessToken: process.env.NUXT_IG_ACCESS_TOKEN || '',
-    fbAccessToken: process.env.NUXT_FB_ACCESS_TOKEN || '',
     linkedinAccessToken: process.env.NUXT_LINKEDIN_ACCESS_TOKEN || '',
     public: {
       siteUrl: '',

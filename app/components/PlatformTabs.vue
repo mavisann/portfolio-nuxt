@@ -7,7 +7,6 @@ const activeTab = ref<'social' | 'professional'>('social')
 
 // Fetch platform data in parallel via Nitro endpoints
 const { data: instagram } = await useFetch<PlatformData>('/api/instagram')
-const { data: facebook } = await useFetch<PlatformData>('/api/facebook')
 const { data: linkedin } = await useFetch<PlatformData>('/api/linkedin')
 const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
 </script>
@@ -48,7 +47,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
     <!-- 2. View A: Social Media Platforms -->
     <div v-if="activeTab === 'social'" class="space-y-6 animate-fadeIn">
       <!-- Instagram Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -82,10 +81,16 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           {{ instagram.profile.bio }}
         </p>
 
+        <!-- Divider -->
+        <div
+          v-if="instagram?.profile.stats && Object.keys(instagram.profile.stats).length > 0"
+          class="border-t border-[#415A77]/20"
+        />
+
         <!-- Stats Row (Rendered ONLY when real stats exist from live sync, ZERO hardcoded values) -->
         <div
           v-if="instagram?.profile.stats && Object.keys(instagram.profile.stats).length > 0"
-          class="flex items-center gap-6 text-xs text-[#CED4DA] pt-1 border-t border-[#415A77]/20"
+          class="flex items-center gap-6 text-xs text-[#CED4DA]"
         >
           <div v-if="instagram.profile.stats.posts">
             <strong class="text-[#E0E1DD]">{{ instagram.profile.stats.posts }}</strong> posts
@@ -99,7 +104,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
         </div>
 
         <!-- Recent Posts Grid (Rendered when posts exist from Meta API) -->
-        <div v-if="instagram?.posts && instagram.posts.length > 0" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+        <div v-if="instagram?.posts && instagram.posts.length > 0" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <a
             v-for="post in instagram.posts"
             :key="post.id"
@@ -142,7 +147,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
       </div>
 
       <!-- Facebook Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -176,22 +181,20 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           {{ facebook?.profile.bio || 'Personal Facebook profile & digital footprint of Prince Semillano.' }}
         </p>
 
-        <!-- Stats Row (Rendered ONLY if live stats exist, ZERO fake placeholders) -->
-        <div
-          v-if="facebook?.profile.stats && Object.keys(facebook.profile.stats).length > 0"
-          class="flex items-center gap-6 text-xs text-[#CED4DA] pt-1 border-t border-[#415A77]/20"
-        >
-          <div v-if="facebook.profile.stats.friends">
-            <strong class="text-[#E0E1DD]">{{ facebook.profile.stats.friends }}</strong> friends
+        <!-- Divider & Stats Row (Rendered ONLY if live stats exist, ZERO fake placeholders) -->
+        <template v-if="facebook?.profile.stats && Object.keys(facebook.profile.stats).length > 0">
+          <div class="border-t border-[#415A77]/20" />
+          <div class="flex items-center gap-6 text-xs text-[#CED4DA]">
+            <div v-if="facebook.profile.stats.friends">
+              <strong class="text-[#E0E1DD]">{{ facebook.profile.stats.friends }}</strong> friends
+            </div>
+            <div v-if="facebook.profile.stats.followers">
+              <strong class="text-[#E0E1DD]">{{ facebook.profile.stats.followers }}</strong> followers
+            </div>
           </div>
-          <div v-if="facebook.profile.stats.followers">
-            <strong class="text-[#E0E1DD]">{{ facebook.profile.stats.followers }}</strong> followers
-          </div>
-        </div>
+        </template>
 
-        <!-- Dynamic Profile Badges -->
-        <div class="flex flex-wrap items-center gap-2.5 pt-1 border-t border-[#415A77]/20 text-xs">
-        </div>
+        <div v-else class="border-t border-[#415A77]/20" />
 
         <!-- Connect Card -->
         <div class="p-4 rounded-2xl bg-[#0D1B2A]/70 border border-[#415A77]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -217,7 +220,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
     <!-- 3. View B: Professional Platforms -->
     <div v-else class="space-y-6 animate-fadeIn">
       <!-- LinkedIn Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -251,8 +254,11 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           {{ linkedin?.profile.bio || 'Information Technology Student at St. Dominic College of Asia · Aspiring Full-Stack Developer.' }}
         </p>
 
+        <!-- Divider -->
+        <div class="border-t border-[#415A77]/20" />
+
         <!-- Dynamic LinkedIn Credentials & Metadata -->
-        <div class="flex flex-wrap items-center gap-2.5 pt-1 border-t border-[#415A77]/20 text-xs">
+        <div class="flex flex-wrap items-center gap-2.5 text-xs">
           <div class="px-3 py-1.5 rounded-xl bg-[#0D1B2A]/80 border border-[#415A77]/40 text-[#E0E1DD] font-medium">
             <strong class="text-white">{{ linkedin?.profile.stats.connections || '19+ connections' }}</strong>
           </div>
@@ -285,7 +291,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
       </div>
 
       <!-- GitHub Repositories Showcase Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -318,8 +324,11 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           All public repositories auto-synced live from GitHub without static templates.
         </p>
 
+        <!-- Divider -->
+        <div class="border-t border-[#415A77]/20" />
+
         <!-- Live Repositories Grid -->
-        <div v-if="repos && repos.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">
+        <div v-if="repos && repos.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           <a
             v-for="repo in repos"
             :key="repo.name"

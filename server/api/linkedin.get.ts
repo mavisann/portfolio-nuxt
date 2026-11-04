@@ -23,7 +23,7 @@ export default defineEventHandler(async (event): Promise<PlatformData> => {
   try {
     const html = await $fetch<string>(profileUrl, {
       headers: {
-        'User-Agent': 'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)',
+        'User-Agent': 'LinkedInBot/1.0 (compatible; Mozilla/5.0; Apache-HttpClient +http://www.linkedin.com)',
       },
       timeout: 4000,
     })
