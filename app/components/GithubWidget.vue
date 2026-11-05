@@ -1,23 +1,33 @@
 <script setup lang="ts">
-import type { GitHubData } from '~/../shared/types'
+import { computed } from 'vue'
+import type { GitHubData, GitHubContributionDay } from '~~/shared/types'
+import githubImg from '~/assets/images/techstack/socials/github.png'
 
 // Smart component: fetches live GitHub data via Nitro endpoint
 const { data: github, pending } = await useFetch<GitHubData>('/api/github')
 
 // Dynamic GitHub-style month labels aligned with each week column
-const weekMonthLabels = computed(() => {
-  if (!github.value?.contributions) return []
+const weekMonthLabels = computed<(string | null)[]>(() => {
+  const contributions = github.value?.contributions
+  if (!contributions || contributions.length === 0) return []
+
   const labels: (string | null)[] = []
   let lastLabeledMonth = -1
   let lastLabeledWeekIndex = -10
 
-  github.value.contributions.forEach((week, wIdx) => {
+  contributions.forEach((week, wIdx) => {
     // Only check days that are not in the future
-    const nonFutureDays = week.contributionDays.filter((d) => !d.isFuture)
+    const nonFutureDays = week.contributionDays.filter((d: GitHubContributionDay) => !d.isFuture)
     let monthToLabel: string | null = null
 
     for (const d of nonFutureDays) {
-      const [year, month, dayNum] = d.date.split('-').map(Number)
+      const parts = d.date.split('-')
+      const year = parseInt(parts[0] ?? '', 10)
+      const month = parseInt(parts[1] ?? '', 10)
+      const dayNum = parseInt(parts[2] ?? '', 10)
+
+      if (isNaN(year) || isNaN(month) || isNaN(dayNum)) continue
+
       const dDate = new Date(year, month - 1, dayNum)
 
       // In GitHub, month label appears when a week contains the 1st through 7th day of a new month
@@ -32,11 +42,19 @@ const weekMonthLabels = computed(() => {
     // Starting month for week 0 if not already labeled
     if (wIdx === 0 && !monthToLabel && nonFutureDays.length > 0) {
       const firstValid = nonFutureDays[0]
-      const [year, month, dayNum] = firstValid.date.split('-').map(Number)
-      const dDate = new Date(year, month - 1, dayNum)
-      monthToLabel = dDate.toLocaleString('en-US', { month: 'short' })
-      lastLabeledMonth = month
-      lastLabeledWeekIndex = 0
+      if (firstValid) {
+        const parts = firstValid.date.split('-')
+        const year = parseInt(parts[0] ?? '', 10)
+        const month = parseInt(parts[1] ?? '', 10)
+        const dayNum = parseInt(parts[2] ?? '', 10)
+
+        if (!isNaN(year) && !isNaN(month) && !isNaN(dayNum)) {
+          const dDate = new Date(year, month - 1, dayNum)
+          monthToLabel = dDate.toLocaleString('en-US', { month: 'short' })
+          lastLabeledMonth = month
+          lastLabeledWeekIndex = 0
+        }
+      }
     }
 
     labels.push(monthToLabel)
@@ -45,7 +63,7 @@ const weekMonthLabels = computed(() => {
   return labels
 })
 
-const getSquareColor = (count: number, isFuture?: boolean) => {
+const getSquareColor = (count: number, isFuture?: boolean): string => {
   if (isFuture) return 'bg-transparent'
   if (count >= 6) return 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.35)]'
   if (count >= 4) return 'bg-emerald-500'
@@ -83,9 +101,12 @@ const getSquareColor = (count: number, isFuture?: boolean) => {
 
           <!-- Profile Text Block (High Contrast, Vertically Middle) -->
           <div class="space-y-1">
-            <span class="text-[11px] font-bold tracking-widest uppercase text-[#778DA9]">
-              GitHub Account
-            </span>
+            <div class="flex items-center gap-1.5">
+              <img :src="githubImg" alt="GitHub" class="w-3.5 h-3.5 object-contain" />
+              <span class="text-[11px] font-bold tracking-widest uppercase text-[#778DA9]">
+                GitHub Account
+              </span>
+            </div>
             <h2 class="text-2xl font-serif font-bold text-[#E0E1DD] tracking-tight">
               {{ github.profile.name }}
             </h2>
@@ -113,10 +134,8 @@ const getSquareColor = (count: number, isFuture?: boolean) => {
           rel="noopener noreferrer"
           class="btn btn-sm rounded-xl bg-[#415A77] hover:bg-[#778DA9] text-white border-0 flex items-center gap-2 self-center shadow-sm transition-transform duration-200 hover:scale-[1.03] flex-shrink-0"
         >
-          <!-- GitHub SVG -->
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-          </svg>
+          <!-- GitHub Official Local Asset -->
+          <img :src="githubImg" alt="GitHub" class="w-4 h-4 object-contain brightness-0 invert" />
           <span>View Profile</span>
         </a>
       </div>

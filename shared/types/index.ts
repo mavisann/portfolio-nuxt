@@ -107,6 +107,7 @@ export interface Certification {
   date: string
   imageUrl: string
   verifyLink: string
+  certificateUrl?: string
 }
 
 // ─── Tech Stack ─────────────────────────────────

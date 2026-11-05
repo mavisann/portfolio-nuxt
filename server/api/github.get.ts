@@ -96,7 +96,7 @@ export default defineCachedEventHandler(
 
     // 1. Fetch live GitHub User Profile
     let profile: GitHubProfile = {
-      avatarUrl: `https://github.com/${username}.png`,
+      avatarUrl: '/profile.png',
       name: 'Prince Semillano',
       login: username,
       bio: 'Full-Stack Developer & Student building modern software solutions.',
