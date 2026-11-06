@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 
   alias: {
     '@animate-ui/vue/primitives/effects/effect': resolve('./app/components/ui/effects/index.ts'),
+    '@animate-ui/vue/primitives/cursor': resolve('./app/components/ui/cursor/index.ts'),
     '@animate-ui/vue': resolve('./app/components/ui/effects/index.ts'),
   },
 

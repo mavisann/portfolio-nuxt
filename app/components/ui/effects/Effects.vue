@@ -12,7 +12,6 @@ interface EffectsProps {
   rootMargin?: string
   triggerOnce?: boolean
   class?: string
-  as?: string
 }
 
 const props = withDefaults(defineProps<EffectsProps>(), {
@@ -22,14 +21,12 @@ const props = withDefaults(defineProps<EffectsProps>(), {
   slide: true,
   fade: true,
   zoom: true,
-  threshold: 0.1,
-  rootMargin: '0px 0px -40px 0px',
+  threshold: 0.08,
+  rootMargin: '0px 0px -30px 0px',
   triggerOnce: true,
-  as: 'div',
 })
 
 const containerRef = ref<HTMLElement | null>(null)
-const isVisible = ref(false)
 let observer: IntersectionObserver | null = null
 let mutationObserver: MutationObserver | null = null
 
@@ -47,23 +44,35 @@ const fromTransform = computed(() => {
   return 'none'
 })
 
-function applyStaggerDelays() {
+function observeChildren() {
   if (!containerRef.value) return
   const children = Array.from(containerRef.value.children) as HTMLElement[]
   const baseDelay = Number(props.delay) || 0
   const hold = Number(props.holdDelay) || 100
 
   children.forEach((child, index) => {
+    child.classList.add('effect-item')
+    // Pre-assign exact staggered delay based on sibling index
     child.style.setProperty('--effect-delay', `${baseDelay + index * hold}ms`)
     child.style.setProperty('--from-filter', fromFilter.value)
     child.style.setProperty('--from-opacity', fromOpacity.value)
     child.style.setProperty('--from-transform', fromTransform.value)
+
+    if (observer) {
+      observer.observe(child)
+    } else {
+      child.classList.add('is-revealed')
+    }
   })
 }
 
 function initObserver() {
   if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-    isVisible.value = true
+    if (containerRef.value) {
+      Array.from(containerRef.value.children).forEach((child) => {
+        ;(child as HTMLElement).classList.add('is-revealed')
+      })
+    }
     return
   }
 
@@ -71,12 +80,15 @@ function initObserver() {
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          isVisible.value = true
-          if (props.triggerOnce && observer && containerRef.value) {
-            observer.unobserve(containerRef.value)
+          const el = entry.target as HTMLElement
+          el.classList.add('is-revealed')
+
+          if (props.triggerOnce && observer) {
+            observer.unobserve(el)
           }
         } else if (!props.triggerOnce) {
-          isVisible.value = false
+          const el = entry.target as HTMLElement
+          el.classList.remove('is-revealed')
         }
       }
     },
@@ -86,19 +98,16 @@ function initObserver() {
     }
   )
 
-  if (containerRef.value) {
-    observer.observe(containerRef.value)
-  }
+  observeChildren()
 }
 
 onMounted(() => {
   nextTick(() => {
-    applyStaggerDelays()
     initObserver()
 
     if (containerRef.value && typeof MutationObserver !== 'undefined') {
       mutationObserver = new MutationObserver(() => {
-        applyStaggerDelays()
+        observeChildren()
       })
       mutationObserver.observe(containerRef.value, { childList: true })
     }
@@ -120,11 +129,7 @@ onUnmounted(() => {
 <template>
   <div
     ref="containerRef"
-    :class="[
-      'animate-effects-container',
-      props.class,
-      isVisible ? 'is-visible' : 'is-idle',
-    ]"
+    :class="['animate-effects-container', props.class]"
   >
     <slot />
   </div>
@@ -136,14 +141,14 @@ onUnmounted(() => {
   --effect-easing: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-effects-container.is-idle > :deep(*) {
+.animate-effects-container > :deep(.effect-item) {
   opacity: var(--from-opacity, 0);
   filter: var(--from-filter, blur(10px));
   transform: var(--from-transform, translateY(28px) scale(0.92));
   will-change: opacity, transform, filter;
 }
 
-.animate-effects-container.is-visible > :deep(*) {
+.animate-effects-container > :deep(.effect-item.is-revealed) {
   animation: effect-reveal var(--effect-duration) var(--effect-easing) both;
   animation-delay: var(--effect-delay, 0ms);
   will-change: opacity, transform, filter;
@@ -162,4 +167,3 @@ onUnmounted(() => {
   }
 }
 </style>
-

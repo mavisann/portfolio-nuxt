@@ -193,7 +193,8 @@ watch(selectedCert, (val) => {
       <TabsContent value="Professional Certification" class="mt-0">
         <Effects
           v-if="professionalCerts.length > 0"
-          :hold-delay="90"
+          :key="activeTab"
+          :hold-delay="100"
           class="grid gap-6 justify-center w-full"
           :class="professionalGridClass"
         >
@@ -225,7 +226,8 @@ watch(selectedCert, (val) => {
       <TabsContent value="Course Certificates" class="mt-0">
         <Effects
           v-if="courseCerts.length > 0"
-          :hold-delay="90"
+          :key="activeTab"
+          :hold-delay="100"
           class="grid gap-6 justify-center w-full"
           :class="courseGridClass"
         >

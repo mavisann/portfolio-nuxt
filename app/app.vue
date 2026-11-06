@@ -30,6 +30,11 @@ const onShaderUnavailable = (reason: unknown) => {
       </ClientOnly>
     </div>
 
+    <!-- Global Animated Custom Cursor -->
+    <ClientOnly>
+      <AppCursor :global="true" />
+    </ClientOnly>
+
     <!-- Application Pages & Frosted Glass Content (Z-index: 10) -->
     <div class="relative z-10 min-h-screen pointer-events-auto flex flex-col">
       <NuxtLayout>
@@ -54,5 +59,19 @@ body {
   width: 100% !important;
   height: 100% !important;
   display: block;
+}
+
+/* Custom Cursor: hide default cursor only when custom cursor is active on fine-pointer (mouse) devices */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor a,
+  html.has-custom-cursor button,
+  html.has-custom-cursor [role="button"],
+  html.has-custom-cursor input,
+  html.has-custom-cursor select,
+  html.has-custom-cursor textarea {
+    cursor: none !important;
+  }
 }
 </style>

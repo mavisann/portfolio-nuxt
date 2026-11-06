@@ -122,8 +122,8 @@ function toggleCategory(name: string) {
       </p>
     </header>
 
-    <!-- 2. Single-Open Accordion Container (Exact UI Preserved) -->
-    <section class="space-y-5">
+    <!-- 2. Single-Open Accordion Container with Scroll Reveal Effects -->
+    <Effects class="space-y-5" :hold-delay="90">
       <div
         v-for="category in techCategories"
         :key="category.categoryName"
@@ -162,9 +162,9 @@ function toggleCategory(name: string) {
         >
           <div class="overflow-hidden min-h-0">
             <div class="px-5 pb-6 sm:px-6 sm:pb-7 pt-2 border-t border-[#415A77]/25">
-              <!-- Symmetrically Centered Cards Grid with Staggered Scroll/Reveal Effects -->
+              <!-- Symmetrically Centered Cards Grid with Staggered Transition/Animation -->
               <Effects
-                :key="openCategory ?? 'closed'"
+                v-if="openCategory === category.categoryName"
                 :hold-delay="70"
                 class="flex flex-wrap justify-center gap-4 sm:gap-6 pt-3"
               >
@@ -180,6 +180,6 @@ function toggleCategory(name: string) {
           </div>
         </div>
       </div>
-    </section>
+    </Effects>
   </div>
 </template>
