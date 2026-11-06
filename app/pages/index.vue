@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Effects } from '@/components/ui/effects'
+
 // Page-level SEO
 usePortfolioSeo({
   title: 'Full-Stack Developer & Student',
@@ -61,20 +63,22 @@ usePortfolioSeo({
 
       <!-- Right Column: Full Portrait Photo Card -->
       <div class="flex justify-center md:justify-end">
-        <div class="relative w-full max-w-sm aspect-[3/4] rounded-3xl p-3 bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 shadow-2xl group transition-transform duration-300 hover:scale-[1.01]">
-          <!-- Ambient Glowing Orbs behind the photo frame -->
-          <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#415A77]/25 blur-3xl group-hover:bg-[#778DA9]/25 transition-colors duration-500 pointer-events-none" />
-          <div class="absolute -bottom-10 -left-10 w-44 h-44 rounded-full bg-[#1B263B]/35 blur-3xl transition-colors duration-500 pointer-events-none" />
+        <Effects :hold-delay="100">
+          <div class="relative w-full max-w-sm aspect-[3/4] rounded-3xl p-3 bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 shadow-2xl group transition-transform duration-300 hover:scale-[1.01]">
+            <!-- Ambient Glowing Orbs behind the photo frame -->
+            <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#415A77]/25 blur-3xl group-hover:bg-[#778DA9]/25 transition-colors duration-500 pointer-events-none" />
+            <div class="absolute -bottom-10 -left-10 w-44 h-44 rounded-full bg-[#1B263B]/35 blur-3xl transition-colors duration-500 pointer-events-none" />
 
-          <!-- Inner Image Frame: Photo fills the full rectangle -->
-          <div class="w-full h-full rounded-2xl overflow-hidden bg-[#0D1B2A] border border-[#415A77]/30 relative shadow-inner">
-            <img
-              src="~/assets/images/profile.jpg"
-              alt="Prince Semillano"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            <!-- Inner Image Frame: Photo fills the full rectangle -->
+            <div class="w-full h-full rounded-2xl overflow-hidden bg-[#0D1B2A] border border-[#415A77]/30 relative shadow-inner">
+              <img
+                src="~/assets/images/profile.jpg"
+                alt="Prince Semillano"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
           </div>
-        </div>
+        </Effects>
       </div>
     </section>
 
@@ -90,26 +94,30 @@ usePortfolioSeo({
       </div>
 
       <!-- Smart Component Fetching Live GraphQL Data -->
-      <GithubWidget />
+      <Effects :hold-delay="100">
+        <GithubWidget />
+      </Effects>
     </section>
 
     <!-- 3. Personal Creed / Quote (At the end of the page) -->
-    <section class="max-w-2xl mx-auto text-center pt-2 pb-6 space-y-3 -mt-6 md:-mt-10">
-      <!-- Quote Mark SVG -->
-      <div class="w-9 h-9 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#778DA9]">
-        <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 opacity-80">
-          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-        </svg>
-      </div>
+    <Effects :hold-delay="100">
+      <section class="max-w-2xl mx-auto text-center pt-2 pb-6 space-y-3 -mt-6 md:-mt-10">
+        <!-- Quote Mark SVG -->
+        <div class="w-9 h-9 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#778DA9]">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 opacity-80">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+          </svg>
+        </div>
 
-      <!-- Stylized Serif Quote (Bright White, High Contrast) -->
-      <blockquote class="font-serif italic text-2xl sm:text-3xl text-[#E0E1DD] tracking-wide leading-snug">
-        &ldquo;fake it,&rsquo;til you make it&rdquo;
-      </blockquote>
+        <!-- Stylized Serif Quote (Bright White, High Contrast) -->
+        <blockquote class="font-serif italic text-2xl sm:text-3xl text-[#E0E1DD] tracking-wide leading-snug">
+          &ldquo;fake it,&rsquo;til you make it&rdquo;
+        </blockquote>
 
-      <p class="text-xs uppercase tracking-widest text-[#778DA9] font-medium">
-        Eat &bull; Code &bull; Sleep &bull; Repeat
-      </p>
-    </section>
+        <p class="text-xs uppercase tracking-widest text-[#778DA9] font-medium">
+          Eat &bull; Code &bull; Sleep &bull; Repeat
+        </p>
+      </section>
+    </Effects>
   </div>
 </template>

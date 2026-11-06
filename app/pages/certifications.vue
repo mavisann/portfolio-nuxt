@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { Certification } from '~~/shared/types'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Effects } from '@/components/ui/effects'
 
 // Badge images
 import excelBadge from '~/components/images/badges/ms-office-excel-associate.png'
@@ -190,8 +191,9 @@ watch(selectedCert, (val) => {
 
       <!-- 3. Professional Certification Tab Content -->
       <TabsContent value="Professional Certification" class="mt-0">
-        <div
+        <Effects
           v-if="professionalCerts.length > 0"
+          :hold-delay="90"
           class="grid gap-6 justify-center w-full"
           :class="professionalGridClass"
         >
@@ -201,7 +203,7 @@ watch(selectedCert, (val) => {
             :certificate="cert"
             @open-certificate="openModal"
           />
-        </div>
+        </Effects>
         <!-- Empty State Fallback -->
         <div
           v-else
@@ -221,8 +223,9 @@ watch(selectedCert, (val) => {
 
       <!-- 4. Course Certificates Tab Content -->
       <TabsContent value="Course Certificates" class="mt-0">
-        <div
+        <Effects
           v-if="courseCerts.length > 0"
+          :hold-delay="90"
           class="grid gap-6 justify-center w-full"
           :class="courseGridClass"
         >
@@ -232,7 +235,7 @@ watch(selectedCert, (val) => {
             :certificate="cert"
             @open-certificate="openModal"
           />
-        </div>
+        </Effects>
         <!-- Empty State Fallback -->
         <div
           v-else

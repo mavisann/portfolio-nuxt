@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Effects } from '@/components/ui/effects'
+
 // Page-level SEO
 usePortfolioSeo({
   title: 'About Me — Prince Semillano',
@@ -26,7 +28,9 @@ usePortfolioSeo({
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <!-- Left Column: Profile, Discord Status, Activities & Bio (5 Columns) -->
       <div class="lg:col-span-5">
-        <AboutSidebar />
+        <Effects :hold-delay="100">
+          <AboutSidebar />
+        </Effects>
       </div>
 
       <!-- Right Column: Animated Platform Tabs (7 Columns) -->

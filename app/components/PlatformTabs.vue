@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import type { PlatformData, GitHubRepo } from '~~/shared/types'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Effects } from '@/components/ui/effects'
 import instagramImg from '~/assets/images/techstack/socials/instagram.png'
 import facebookImg from '~/assets/images/techstack/socials/facebook.png'
 import linkedinImg from '~/assets/images/techstack/socials/linkedin.png'
@@ -32,8 +33,9 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
     </div>
 
     <!-- 2. View A: Social Media Platforms with smooth TabsContent transition -->
-    <TabsContent value="social" class="mt-0 space-y-6">
-      <!-- Instagram Card -->
+    <TabsContent value="social" class="mt-0">
+      <Effects :hold-delay="100" class="space-y-6">
+        <!-- Instagram Card -->
       <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -191,11 +193,13 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           </a>
         </div>
       </div>
+      </Effects>
     </TabsContent>
 
     <!-- 3. View B: Professional Platforms with smooth TabsContent transition -->
-    <TabsContent value="professional" class="mt-0 space-y-6">
-      <!-- LinkedIn Card -->
+    <TabsContent value="professional" class="mt-0">
+      <Effects :hold-delay="100" class="space-y-6">
+        <!-- LinkedIn Card -->
       <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -359,6 +363,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           No public repositories found on @mavisann yet.
         </div>
       </div>
+      </Effects>
     </TabsContent>
   </Tabs>
 </template>

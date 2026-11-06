@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { GitHubData, GitHubContributionDay } from '~~/shared/types'
 import githubImg from '~/assets/images/techstack/socials/github.png'
+import { Effects } from '@/components/ui/effects'
 
 // Smart component: fetches live GitHub data via Nitro endpoint
 const { data: github, pending } = await useFetch<GitHubData>('/api/github')
@@ -231,7 +232,11 @@ const getSquareColor = (count: number, isFuture?: boolean): string => {
         </div>
 
         <!-- Repositories Responsive Grid -->
-        <div v-if="github.pinnedRepos && github.pinnedRepos.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Effects
+          v-if="github.pinnedRepos && github.pinnedRepos.length > 0"
+          :hold-delay="80"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <a
             v-for="repo in github.pinnedRepos"
             :key="repo.name"
@@ -274,7 +279,7 @@ const getSquareColor = (count: number, isFuture?: boolean): string => {
               </div>
             </div>
           </a>
-        </div>
+        </Effects>
 
         <!-- Empty State if no public repos are published yet -->
         <div

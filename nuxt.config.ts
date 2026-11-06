@@ -27,6 +27,11 @@ export default defineNuxtConfig({
     appManifest: false,
   },
 
+  alias: {
+    '@animate-ui/vue/primitives/effects/effect': resolve('./app/components/ui/effects/index.ts'),
+    '@animate-ui/vue': resolve('./app/components/ui/effects/index.ts'),
+  },
+
   vite: {
     plugins: [
       tailwindcss(),

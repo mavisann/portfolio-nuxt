@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import type { TechCategory } from '~~/shared/types'
 import TechCard from '~/components/TechCard.vue'
+import { Effects } from '@/components/ui/effects'
 
 // 1. Programming Languages / Frontend Local Image Assets
 import htmlImg from '~/assets/images/techstack/programming-language-images/html.png'
@@ -161,8 +162,12 @@ function toggleCategory(name: string) {
         >
           <div class="overflow-hidden min-h-0">
             <div class="px-5 pb-6 sm:px-6 sm:pb-7 pt-2 border-t border-[#415A77]/25">
-              <!-- Symmetrically Centered Cards Grid -->
-              <div class="flex flex-wrap justify-center gap-4 sm:gap-6 pt-3">
+              <!-- Symmetrically Centered Cards Grid with Staggered Scroll/Reveal Effects -->
+              <Effects
+                :key="openCategory ?? 'closed'"
+                :hold-delay="70"
+                class="flex flex-wrap justify-center gap-4 sm:gap-6 pt-3"
+              >
                 <TechCard
                   v-for="item in category.items"
                   :key="item.title"
@@ -170,7 +175,7 @@ function toggleCategory(name: string) {
                   :full-name="item.fullName"
                   :image-src="item.imageSrc"
                 />
-              </div>
+              </Effects>
             </div>
           </div>
         </div>

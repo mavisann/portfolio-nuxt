@@ -25,3 +25,28 @@ declare module '*.webp' {
   export default content
 }
 
+declare module '@animate-ui/vue/primitives/effects/effect' {
+  import type { DefineComponent } from 'vue'
+  export const Effects: DefineComponent<Record<string, any>>
+  export default Effects
+}
+
+declare module '@animate-ui/vue' {
+  import type { DefineComponent } from 'vue'
+  export const Effects: DefineComponent<Record<string, any>>
+  export default Effects
+}
+
+declare module '@/components/ui/effects' {
+  import type { DefineComponent } from 'vue'
+  export const Effects: DefineComponent<Record<string, any>>
+  export default Effects
+}
+
+declare module '~/components/ui/effects' {
+  import type { DefineComponent } from 'vue'
+  export const Effects: DefineComponent<Record<string, any>>
+  export default Effects
+}
+
+
