@@ -67,7 +67,7 @@ const handleCopy = async (val: string) => {
           <h1
             class="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tight text-[#E0E1DD] leading-[1.12]"
           >
-            Let's build something <span class="text-teal-400">that lasts.</span>
+          Let's build systems that solve real problems.
           </h1>
           <!-- Status Pill -->
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1B263B]/80 border border-[#415A77]/40 text-xs text-[#CED4DA] font-medium backdrop-blur-md">
@@ -76,17 +76,16 @@ const handleCopy = async (val: string) => {
           </div>
           <!-- Description Paragraph -->
           <p class="text-sm sm:text-base text-[#CED4DA] max-w-lg leading-relaxed font-normal">
-            Full-stack, AI, APIs, bots, or automation — if it needs to actually work, let's talk. Based in Cavite, Philippines, working with teams everywhere.
+            Full-stack web apps, integrated business portals, or real-time data synchronization — taking projects from the initial sprint to final deployment. Based in Cavite, Philippines, engineering solutions that work exactly how they should.
           </p>
 
           <!-- Interactive "Get in touch" Form Dialog Trigger Button -->
           <div class="pt-2">
             <ContactDialog
               from="top"
-              button-variant="teal"
-              button-size="lg"
+              button-variant="outline"
               button-text="Get in touch"
-              button-class="rounded-full shadow-[0_0_20px_rgba(45,212,191,0.25)] hover:shadow-[0_0_28px_rgba(45,212,191,0.4)] px-6 text-sm font-bold"
+              button-class="btn rounded-full px-7 text-sm font-semibold border border-[#415A77] bg-[#1B263B]/80 hover:bg-[#1B263B] text-[#E0E1DD] shadow-lg shadow-[#0D1B2A]/60 transition-all duration-300 hover:scale-[1.03] h-auto py-3 cursor-pointer"
             />
           </div>
         </div>

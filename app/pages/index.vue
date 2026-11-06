@@ -1,12 +1,37 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Effects } from '@/components/ui/effects'
 import ContactDialog from '~/components/ContactDialog.vue'
+import { RollingText } from '~/components/ui/texts/rolling'
+import InteractiveParticles from '~/components/InteractiveParticles.vue'
+import myNameImg from '~/assets/images/my-name.png'
 
 // Page-level SEO
 usePortfolioSeo({
   title: 'Full-Stack Developer & Student',
   description:
     'Hi! I am Prince Semillano, pursuing Full-Stack Development, AI integrations, APIs, bots, and automated software solutions.',
+})
+
+// Alternating hero roles
+const roles = [
+  'Full-Stack Developer',
+  'AI Integrations & APIs',
+  'Automation Systems',
+]
+
+const currentRoleIndex = ref(0)
+const currentRole = computed(() => roles[currentRoleIndex.value] || roles[0])
+let roleTimer: ReturnType<typeof setInterval> | null = null
+
+onMounted(() => {
+  roleTimer = setInterval(() => {
+    currentRoleIndex.value = (currentRoleIndex.value + 1) % roles.length
+  }, 3500)
+})
+
+onUnmounted(() => {
+  if (roleTimer) clearInterval(roleTimer)
 })
 </script>
 
@@ -21,23 +46,40 @@ usePortfolioSeo({
           Hi! I&rsquo;m
         </span>
 
-        <!-- Main Name Headline (Bright High-Contrast Soft White) -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tight text-[#E0E1DD] uppercase leading-none">
-          Prince <br class="hidden sm:inline" />
-          Semillano
-        </h1>
+        <!-- Main Name Headline: Interactive Signature Particles -->
+        <div class="w-full max-w-sm sm:max-w-md md:max-w-lg aspect-[2000/681] h-28 sm:h-36 md:h-44 relative -ml-1 sm:-ml-2">
+          <ClientOnly>
+            <InteractiveParticles
+              :src="myNameImg"
+              :allow-upload="false"
+              background="transparent"
+              color="#ffffff"
+              :size="3"
+              :randomness="1.8"
+              :depth="3.0"
+              :touch-radius="0.16"
+              :threshold="34"
+              class="w-full h-full"
+            />
+            <template #fallback>
+              <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tight text-[#E0E1DD] uppercase leading-none">
+                Prince <br class="hidden sm:inline" />
+                Semillano
+              </h1>
+            </template>
+          </ClientOnly>
+          <h1 class="sr-only">Prince Semillano</h1>
+        </div>
 
-        <!-- Role Badges (Deep Sea Steel Accents) -->
-        <div class="flex flex-wrap gap-2 pt-1">
-          <span class="badge badge-sm rounded-full bg-[#1B263B] text-[#E0E1DD] border border-[#415A77] px-3.5 py-2 font-medium">
-            Full-Stack Developer
-          </span>
-          <span class="badge badge-sm rounded-full bg-[#1B263B] text-[#CED4DA] border border-[#415A77] px-3.5 py-2 font-medium">
-            AI Integrations & APIs
-          </span>
-          <span class="badge badge-sm rounded-full bg-[#1B263B] text-[#CED4DA] border border-[#415A77] px-3.5 py-2 font-medium">
-            Automation Systems
-          </span>
+        <!-- Role Subheading: RollingText alternating through roles -->
+        <div class="pt-0.5 min-h-[2.25rem] sm:min-h-[2.75rem] flex items-center">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-[#778DA9] tracking-tight">
+            <RollingText
+              :key="currentRoleIndex"
+              :text="currentRole"
+              class="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-[#778DA9] tracking-tight"
+            />
+          </h2>
         </div>
 
         <!-- Descriptive Paragraph (High Legibility Steel Gray) -->
