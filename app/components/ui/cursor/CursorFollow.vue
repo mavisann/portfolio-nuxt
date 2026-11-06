@@ -155,7 +155,7 @@ onUnmounted(() => {
   <div
     ref="elRef"
     :class="[
-      'fixed top-0 left-0 pointer-events-none z-[9998] select-none will-change-transform transition-[opacity,scale] duration-150 ease-out drop-shadow-md',
+      'fixed top-0 left-0 pointer-events-none z-[99998] select-none will-change-transform transition-[opacity,scale] duration-150 ease-out drop-shadow-md',
       props.class,
     ]"
     :style="style"

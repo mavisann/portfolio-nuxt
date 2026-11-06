@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import logoImg from '~/assets/logos/website-logo-darkmode.png'
+import ContactDialog from '~/components/ContactDialog.vue'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
@@ -120,12 +121,14 @@ watch(() => route.path, () => {
 
       <!-- Right: CTA Button & Mobile Toggle -->
       <div class="flex items-center gap-2">
-        <NuxtLink
-          to="/contact"
-          class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-semibold text-[#E0E1DD] bg-[#415A77]/70 hover:bg-[#415A77] border border-[#778DA9]/40 shadow-sm transition-all duration-200 hover:scale-[1.03]"
-        >
-          Get in touch
-        </NuxtLink>
+        <!-- Desktop CTA Button: Get in touch Dialog -->
+        <ContactDialog
+          from="top"
+          button-variant="outline"
+          button-size="sm"
+          button-text="Get in touch"
+          button-class="hidden sm:inline-flex rounded-full text-xs font-semibold text-[#E0E1DD] bg-[#415A77]/70 hover:bg-[#415A77] border border-[#778DA9]/40 shadow-sm transition-all duration-200 hover:scale-[1.03]"
+        />
 
         <!-- Mobile Menu Toggle Button -->
         <button
@@ -184,13 +187,13 @@ watch(() => route.path, () => {
           {{ link.name }}
         </NuxtLink>
         <div class="pt-2 mt-1 border-t border-[#415A77]/30">
-          <NuxtLink
-            to="/contact"
-            class="w-full inline-flex items-center justify-center py-2 rounded-xl text-xs font-semibold text-[#E0E1DD] bg-[#415A77] hover:bg-[#778DA9] transition-colors"
+          <ContactDialog
+            from="top"
+            button-variant="default"
+            button-text="Get in touch"
+            button-class="w-full inline-flex items-center justify-center py-2 rounded-xl text-xs font-semibold text-[#E0E1DD] bg-[#415A77] hover:bg-[#778DA9] transition-colors"
             @click="mobileMenuOpen = false"
-          >
-            Get in touch
-          </NuxtLink>
+          />
         </div>
       </div>
     </Transition>

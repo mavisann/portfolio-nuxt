@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Effects } from '@/components/ui/effects'
+import ContactDialog from '~/components/ContactDialog.vue'
 
 // Page-level SEO
 usePortfolioSeo({
@@ -52,12 +53,12 @@ usePortfolioSeo({
           >
             View Projects
           </NuxtLink>
-          <NuxtLink
-            to="/contact"
-            class="btn rounded-full px-7 text-sm font-semibold border border-[#415A77] bg-[#1B263B]/80 hover:bg-[#1B263B] text-[#E0E1DD] transition-all duration-300"
-          >
-            Get in touch
-          </NuxtLink>
+          <ContactDialog
+            from="top"
+            button-variant="outline"
+            button-text="Get in touch"
+            button-class="btn rounded-full px-7 text-sm font-semibold border border-[#415A77] bg-[#1B263B]/80 hover:bg-[#1B263B] text-[#E0E1DD] transition-all duration-300 h-auto py-3 cursor-pointer"
+          />
         </div>
       </div>
 

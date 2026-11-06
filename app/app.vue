@@ -64,13 +64,7 @@ body {
 /* Custom Cursor: hide default cursor only when custom cursor is active on fine-pointer (mouse) devices */
 @media (pointer: fine) {
   html.has-custom-cursor,
-  html.has-custom-cursor body,
-  html.has-custom-cursor a,
-  html.has-custom-cursor button,
-  html.has-custom-cursor [role="button"],
-  html.has-custom-cursor input,
-  html.has-custom-cursor select,
-  html.has-custom-cursor textarea {
+  html.has-custom-cursor * {
     cursor: none !important;
   }
 }
