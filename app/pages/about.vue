@@ -10,7 +10,7 @@ usePortfolioSeo({
 <template>
   <div class="space-y-10 md:space-y-12 text-[#E0E1DD]">
     <!-- Page Header -->
-    <header class="space-y-2 text-center sm:text-left">
+    <header class="space-y-3 text-center max-w-2xl mx-auto">
       <h1 class="text-4xl sm:text-5xl font-serif font-black tracking-tight text-[#E0E1DD]">
         About Me
       </h1>

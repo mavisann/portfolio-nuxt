@@ -2,11 +2,16 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import profileImg from '~/assets/images/profile.jpg'
 import discordImg from '~/assets/images/techstack/socials/discord.png'
-import type { DiscordPresence, DiscordActivity } from '~/../shared/types'
+import type { DiscordPresence, DiscordActivity } from '~~/shared/types'
 
 // SSR initial data fetch
 const { data: initialDiscord } = await useFetch<DiscordPresence>('/api/discord')
 const discord = ref<DiscordPresence | null>(initialDiscord.value || null)
+
+// Safely access primary non-Spotify activity with full typing
+const primaryActivity = computed<DiscordActivity | null>(() => {
+  return discord.value?.activities?.[0] || null
+})
 
 // Reactive ticker for live elapsed & Spotify progress bar
 const now = ref(Date.now())
@@ -91,9 +96,10 @@ const spotifyProgress = computed(() => {
 function connectLanyardWs() {
   if (import.meta.server) return
   try {
-    socket = new WebSocket('wss://api.lanyard.rest/socket')
+    const ws = new WebSocket('wss://api.lanyard.rest/socket')
+    socket = ws
 
-    socket.onmessage = (event) => {
+    ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data)
         const { op, d } = message
@@ -103,20 +109,22 @@ function connectLanyardWs() {
           const interval = d.heartbeat_interval
           if (heartbeatTimer) clearInterval(heartbeatTimer)
           heartbeatTimer = setInterval(() => {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-              socket.send(JSON.stringify({ op: 3 }))
+            if (ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({ op: 3 }))
             }
           }, interval)
 
           // Subscribe to User ID
-          socket.send(
-            JSON.stringify({
-              op: 2,
-              d: {
-                subscribe_to_id: '1277974645580103765',
-              },
-            }),
-          )
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(
+              JSON.stringify({
+                op: 2,
+                d: {
+                  subscribe_to_id: '1277974645580103765',
+                },
+              }),
+            )
+          }
         }
 
         // Opcode 0: Event (INIT_STATE or PRESENCE_UPDATE)
@@ -128,7 +136,7 @@ function connectLanyardWs() {
       }
     }
 
-    socket.onclose = () => {
+    ws.onclose = () => {
       if (heartbeatTimer) clearInterval(heartbeatTimer)
     }
   } catch (err) {
@@ -307,7 +315,7 @@ onUnmounted(() => {
 
       <!-- General Activity (VS Code, Game, etc.) with Live Elapsed Time -->
       <div
-        v-if="discord?.activities && discord.activities.length > 0"
+        v-if="primaryActivity"
         class="p-4 rounded-2xl bg-[#0D1B2A]/80 border border-[#415A77]/30 space-y-2"
       >
         <div class="flex items-center justify-between gap-2">
@@ -317,27 +325,27 @@ onUnmounted(() => {
           </div>
           <!-- Live Elapsed Time -->
           <span
-            v-if="discord.activities[0].timestamps?.start"
+            v-if="primaryActivity.timestamps?.start"
             class="text-[10px] font-mono text-[#778DA9] bg-[#1B263B]/80 px-2 py-0.5 rounded-full border border-[#415A77]/40"
           >
-            {{ formatElapsed(discord.activities[0].timestamps.start) }}
+            {{ formatElapsed(primaryActivity.timestamps.start) }}
           </span>
         </div>
 
         <div class="flex items-start gap-3">
           <img
-            v-if="discord.activities[0].largeImageUrl"
-            :src="discord.activities[0].largeImageUrl"
-            :alt="discord.activities[0].name"
+            v-if="primaryActivity.largeImageUrl"
+            :src="primaryActivity.largeImageUrl"
+            :alt="primaryActivity.name"
             class="w-10 h-10 rounded-xl object-cover border border-[#415A77]/40 flex-shrink-0"
           />
           <div class="min-w-0 flex-1 space-y-0.5">
-            <p class="text-xs font-bold text-[#E0E1DD]">{{ discord.activities[0].name }}</p>
-            <p v-if="discord.activities[0].details" class="text-[11px] text-[#CED4DA] truncate">
-              {{ discord.activities[0].details }}
+            <p class="text-xs font-bold text-[#E0E1DD]">{{ primaryActivity.name }}</p>
+            <p v-if="primaryActivity.details" class="text-[11px] text-[#CED4DA] truncate">
+              {{ primaryActivity.details }}
             </p>
-            <p v-if="discord.activities[0].state" class="text-[10px] text-[#778DA9] font-mono truncate">
-              {{ discord.activities[0].state }}
+            <p v-if="primaryActivity.state" class="text-[10px] text-[#778DA9] font-mono truncate">
+              {{ primaryActivity.state }}
             </p>
           </div>
         </div>
@@ -345,7 +353,7 @@ onUnmounted(() => {
 
       <!-- Offline / Away Fallback -->
       <div
-        v-if="!discord?.spotify && (!discord?.activities || discord.activities.length === 0)"
+        v-if="!discord?.spotify && !primaryActivity"
         class="p-4 rounded-2xl bg-[#0D1B2A]/50 border border-dashed border-[#415A77]/30 text-center py-5 space-y-1"
       >
         <p class="text-xs font-semibold text-[#E0E1DD]">Currently Away from Keyboard</p>

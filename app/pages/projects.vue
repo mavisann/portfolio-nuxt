@@ -1,5 +1,8 @@
 <script setup lang="ts">
-// Step 7: Projects page — Filtered iframe grid
+usePortfolioSeo({
+  title: 'Projects — Prince Semillano',
+  description: 'Explore featured full-stack projects, web applications, APIs, and tools developed by Prince Semillano.',
+})
 </script>
 
 <template>

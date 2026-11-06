@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import type { Certification } from '~/../shared/types'
+import type { Certification } from '~~/shared/types'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 // Badge images
 import excelBadge from '~/components/images/badges/ms-office-excel-associate.png'
@@ -74,11 +75,6 @@ const certifications = ref<Certification[]>([
   },
 ])
 
-// Computed Filtered Array based on Active Tab
-const filteredCertifications = computed(() => {
-  return certifications.value.filter(cert => cert.category === activeTab.value)
-})
-
 // Counts for Category Badges
 const professionalCount = computed(
   () => certifications.value.filter(c => c.category === 'Professional Certification').length
@@ -87,21 +83,25 @@ const courseCount = computed(
   () => certifications.value.filter(c => c.category === 'Course Certificates').length
 )
 
+// Independent category certification arrays for seamless tab transitions
+const professionalCerts = computed(() =>
+  certifications.value.filter(cert => cert.category === 'Professional Certification')
+)
+const courseCerts = computed(() =>
+  certifications.value.filter(cert => cert.category === 'Course Certificates')
+)
+
 // Dynamic Responsive Grid Layout: automatically auto-adjusts as certifications
 // are added while guaranteeing cards stay perfectly centered on the page
-const gridLayoutClass = computed(() => {
-  const count = filteredCertifications.value.length
-  if (count === 1) {
-    return 'grid-cols-1 max-w-md mx-auto'
-  }
-  if (count === 2) {
-    return 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto'
-  }
-  if (count === 3) {
-    return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto'
-  }
+const getGridClass = (count: number) => {
+  if (count === 1) return 'grid-cols-1 max-w-md mx-auto'
+  if (count === 2) return 'grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto'
+  if (count === 3) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto'
   return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto'
-})
+}
+
+const professionalGridClass = computed(() => getGridClass(professionalCerts.value.length))
+const courseGridClass = computed(() => getGridClass(courseCerts.value.length))
 
 // Modal State for Certificate Document Preview
 const selectedCert = ref<Certification | null>(null)
@@ -160,82 +160,96 @@ watch(selectedCert, (val) => {
       </p>
     </header>
 
-    <!-- 2. Centered Segmented Control (Tabs) -->
-    <div class="flex justify-center">
-      <div
-        class="relative flex items-center p-1.5 rounded-full bg-[#1B263B]/70 border border-[#415A77]/50 backdrop-blur-xl shadow-xl"
-      >
-        <!-- Professional Certification Button -->
-        <button
-          type="button"
-          class="relative px-5 py-2.5 rounded-full text-xs font-bold transition-colors duration-200 z-10 flex items-center gap-2"
-          :class="activeTab === 'Professional Certification' ? 'text-white' : 'text-[#CED4DA] hover:text-[#E0E1DD]'"
-          @click="activeTab = 'Professional Certification'"
-        >
-          <span
-            v-if="activeTab === 'Professional Certification'"
-            class="absolute inset-0 rounded-full bg-[#415A77] shadow-md -z-10 transition-all duration-300"
-          />
-          <span>Professional Certification</span>
-          <span
-            class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-mono transition-colors"
-            :class="activeTab === 'Professional Certification' ? 'bg-[#0D1B2A]/70 text-white' : 'bg-[#0D1B2A]/40 text-[#778DA9]'"
-          >
-            {{ professionalCount }}
-          </span>
-        </button>
+    <!-- 2. Centered Segmented Control (Tabs with Smooth Transitions) -->
+    <Tabs v-model="activeTab" default-value="Professional Certification" class="w-full space-y-8">
+      <div class="flex justify-center">
+        <TabsList>
+          <!-- Professional Certification Trigger -->
+          <TabsTrigger value="Professional Certification" class="flex items-center gap-2 py-2.5">
+            <span>Professional Certification</span>
+            <span
+              class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-mono transition-colors"
+              :class="activeTab === 'Professional Certification' ? 'bg-[#0D1B2A]/70 text-white' : 'bg-[#0D1B2A]/40 text-[#778DA9]'"
+            >
+              {{ professionalCount }}
+            </span>
+          </TabsTrigger>
 
-        <!-- Course Certificates Button -->
-        <button
-          type="button"
-          class="relative px-5 py-2.5 rounded-full text-xs font-bold transition-colors duration-200 z-10 flex items-center gap-2"
-          :class="activeTab === 'Course Certificates' ? 'text-white' : 'text-[#CED4DA] hover:text-[#E0E1DD]'"
-          @click="activeTab = 'Course Certificates'"
-        >
-          <span
-            v-if="activeTab === 'Course Certificates'"
-            class="absolute inset-0 rounded-full bg-[#415A77] shadow-md -z-10 transition-all duration-300"
-          />
-          <span>Course Certificates</span>
-          <span
-            class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-mono transition-colors"
-            :class="activeTab === 'Course Certificates' ? 'bg-[#0D1B2A]/70 text-white' : 'bg-[#0D1B2A]/40 text-[#778DA9]'"
-          >
-            {{ courseCount }}
-          </span>
-        </button>
+          <!-- Course Certificates Trigger -->
+          <TabsTrigger value="Course Certificates" class="flex items-center gap-2 py-2.5">
+            <span>Course Certificates</span>
+            <span
+              class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-mono transition-colors"
+              :class="activeTab === 'Course Certificates' ? 'bg-[#0D1B2A]/70 text-white' : 'bg-[#0D1B2A]/40 text-[#778DA9]'"
+            >
+              {{ courseCount }}
+            </span>
+          </TabsTrigger>
+        </TabsList>
       </div>
-    </div>
 
-    <!-- 3. Dynamic Centered Responsive Grid -->
-    <div
-      v-if="filteredCertifications.length > 0"
-      class="grid gap-6 justify-center w-full animate-fadeIn"
-      :class="gridLayoutClass"
-    >
-      <CertificationCard
-        v-for="cert in filteredCertifications"
-        :key="cert.id"
-        :certificate="cert"
-        @open-certificate="openModal"
-      />
-    </div>
+      <!-- 3. Professional Certification Tab Content -->
+      <TabsContent value="Professional Certification" class="mt-0">
+        <div
+          v-if="professionalCerts.length > 0"
+          class="grid gap-6 justify-center w-full"
+          :class="professionalGridClass"
+        >
+          <CertificationCard
+            v-for="cert in professionalCerts"
+            :key="cert.id"
+            :certificate="cert"
+            @open-certificate="openModal"
+          />
+        </div>
+        <!-- Empty State Fallback -->
+        <div
+          v-else
+          class="p-12 rounded-3xl bg-[#1B263B]/60 backdrop-blur-xl border border-dashed border-[#415A77]/40 text-center space-y-3 max-w-md mx-auto"
+        >
+          <div class="w-12 h-12 rounded-2xl bg-[#0D1B2A] border border-[#415A77]/40 flex items-center justify-center mx-auto text-[#778DA9]">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h3 class="text-base font-serif font-bold text-[#E0E1DD]">No Certifications Found</h3>
+          <p class="text-xs text-[#CED4DA]">There are currently no items listed under this category.</p>
+        </div>
+      </TabsContent>
 
-    <!-- Empty State Fallback -->
-    <div
-      v-else
-      class="p-12 rounded-3xl bg-[#1B263B]/60 backdrop-blur-xl border border-dashed border-[#415A77]/40 text-center space-y-3 max-w-md mx-auto"
-    >
-      <div class="w-12 h-12 rounded-2xl bg-[#0D1B2A] border border-[#415A77]/40 flex items-center justify-center mx-auto text-[#778DA9]">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-      </div>
-      <h3 class="text-base font-serif font-bold text-[#E0E1DD]">No Certifications Found</h3>
-      <p class="text-xs text-[#CED4DA]">There are currently no items listed under this category.</p>
-    </div>
+      <!-- 4. Course Certificates Tab Content -->
+      <TabsContent value="Course Certificates" class="mt-0">
+        <div
+          v-if="courseCerts.length > 0"
+          class="grid gap-6 justify-center w-full"
+          :class="courseGridClass"
+        >
+          <CertificationCard
+            v-for="cert in courseCerts"
+            :key="cert.id"
+            :certificate="cert"
+            @open-certificate="openModal"
+          />
+        </div>
+        <!-- Empty State Fallback -->
+        <div
+          v-else
+          class="p-12 rounded-3xl bg-[#1B263B]/60 backdrop-blur-xl border border-dashed border-[#415A77]/40 text-center space-y-3 max-w-md mx-auto"
+        >
+          <div class="w-12 h-12 rounded-2xl bg-[#0D1B2A] border border-[#415A77]/40 flex items-center justify-center mx-auto text-[#778DA9]">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h3 class="text-base font-serif font-bold text-[#E0E1DD]">No Certifications Found</h3>
+          <p class="text-xs text-[#CED4DA]">There are currently no items listed under this category.</p>
+        </div>
+      </TabsContent>
+    </Tabs>
 
     <!-- 4. Certificate Pop-up Modal (Blurs the Background) -->
     <Teleport to="body">

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-// Step 8: Contact page — Two-column starfield layout
+usePortfolioSeo({
+  title: 'Contact — Prince Semillano',
+  description: 'Get in touch with Prince Semillano for software development inquiries, internships, and collaborations.',
+})
 </script>
 
 <template>

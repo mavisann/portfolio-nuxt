@@ -1,6 +1,24 @@
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 
+function ensureClientManifestStub() {
+  const dir = resolve('.nuxt/dist/server')
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  const manifestPath = resolve(dir, 'client.manifest.mjs')
+  if (!existsSync(manifestPath)) {
+    writeFileSync(manifestPath, 'export default () => ({});\n', 'utf8')
+  }
+}
+
 export default defineNuxtConfig({
+  hooks: {
+    'build:before': ensureClientManifestStub,
+    'nitro:build:before': ensureClientManifestStub,
+    'prepare:types': ensureClientManifestStub,
+  },
   css: ['~/assets/styles/main.css'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { PlatformData, GitHubRepo } from '~/../shared/types'
+import type { PlatformData, GitHubRepo } from '~~/shared/types'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import instagramImg from '~/assets/images/techstack/socials/instagram.png'
 import facebookImg from '~/assets/images/techstack/socials/facebook.png'
 import linkedinImg from '~/assets/images/techstack/socials/linkedin.png'
@@ -17,42 +18,23 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
 </script>
 
 <template>
-  <div class="space-y-6 text-[#E0E1DD]">
-    <!-- 1. Centered Segmented Pill Control (ForgeUI Animated Style) -->
+  <Tabs v-model="activeTab" default-value="social" class="w-full space-y-6 text-[#E0E1DD]">
+    <!-- 1. Centered Segmented Pill Control (TabsList / TabsTrigger) -->
     <div class="flex justify-center sm:justify-start">
-      <div class="relative flex items-center p-1.5 rounded-full bg-[#1B263B]/70 border border-[#415A77]/50 backdrop-blur-xl shadow-xl">
-        <button
-          type="button"
-          class="relative px-5 py-2 rounded-full text-xs font-bold transition-colors duration-200 z-10"
-          :class="activeTab === 'social' ? 'text-white' : 'text-[#CED4DA] hover:text-[#E0E1DD]'"
-          @click="activeTab = 'social'"
-        >
-          <span
-            v-if="activeTab === 'social'"
-            class="absolute inset-0 rounded-full bg-[#415A77] shadow-md -z-10 transition-all duration-300"
-          />
+      <TabsList>
+        <TabsTrigger value="social">
           Social Media
-        </button>
-
-        <button
-          type="button"
-          class="relative px-5 py-2 rounded-full text-xs font-bold transition-colors duration-200 z-10"
-          :class="activeTab === 'professional' ? 'text-white' : 'text-[#CED4DA] hover:text-[#E0E1DD]'"
-          @click="activeTab = 'professional'"
-        >
-          <span
-            v-if="activeTab === 'professional'"
-            class="absolute inset-0 rounded-full bg-[#415A77] shadow-md -z-10 transition-all duration-300"
-          />
+        </TabsTrigger>
+        <TabsTrigger value="professional">
           Professional Platforms
-        </button>
-      </div>
+        </TabsTrigger>
+      </TabsList>
     </div>
 
-    <!-- 2. View A: Social Media Platforms -->
-    <div v-if="activeTab === 'social'" class="space-y-6 animate-fadeIn">
+    <!-- 2. View A: Social Media Platforms with smooth TabsContent transition -->
+    <TabsContent value="social" class="mt-0 space-y-6">
       <!-- Instagram Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -151,7 +133,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
       </div>
 
       <!-- Facebook Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -209,14 +191,12 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           </a>
         </div>
       </div>
+    </TabsContent>
 
-
-    </div>
-
-    <!-- 3. View B: Professional Platforms -->
-    <div v-else class="space-y-6 animate-fadeIn">
+    <!-- 3. View B: Professional Platforms with smooth TabsContent transition -->
+    <TabsContent value="professional" class="mt-0 space-y-6">
       <!-- LinkedIn Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -290,7 +270,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
       </div>
 
       <!-- GitHub Repositories Showcase Card -->
-      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="bg-[#1B263B]/60 backdrop-blur-xl border border-[#415A77]/40 hover:border-[#778DA9]/60 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl space-y-5">
         <!-- Platform Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
@@ -379,7 +359,7 @@ const { data: repos } = await useFetch<GitHubRepo[]>('/api/github-full')
           No public repositories found on @mavisann yet.
         </div>
       </div>
-    </div>
-  </div>
+    </TabsContent>
+  </Tabs>
 </template>
 

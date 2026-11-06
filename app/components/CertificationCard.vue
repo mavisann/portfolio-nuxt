@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Certification } from '~/../shared/types'
+import type { Certification } from '~~/shared/types'
 
 const props = defineProps<{
   certificate?: Certification
